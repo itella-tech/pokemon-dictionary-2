@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
+import { useRouter } from 'next/navigation'
 
 interface Pokemon {
   id: number;
@@ -12,6 +13,7 @@ interface Pokemon {
 }
 
 export function Component() {
+  const router = useRouter()
   const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
 
   useEffect(() => {
@@ -31,6 +33,10 @@ export function Component() {
 
     fetchPokemon();
   }, []);
+
+  const handlePokemonClick = (pokemonId: number) => {
+    router.push(`/pokemon/${pokemonId}`)
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -64,7 +70,11 @@ export function Component() {
       <main className="flex-1 overflow-auto bg-background p-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {pokemonList.map((pokemon) => (
-            <Card key={pokemon.id} className="bg-card text-card-foreground rounded-lg overflow-hidden shadow-lg">
+            <Card 
+              key={pokemon.id} 
+              className="bg-card text-card-foreground rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
+              onClick={() => handlePokemonClick(pokemon.id)}
+            >
               <img
                 src={pokemon.sprites.front_default}
                 alt={pokemon.name}
